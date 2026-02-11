@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums baseados nos seus types do frontend
+enum Role {
+  ALUNO
+  TREINADOR
+}
+
+enum Gender {
+  MASCULINO
+  FEMININO
+  MISTO
+}
+
+enum PaymentStatus {
+  PAGO
+  PENDENTE
+  ATRASADO
+}
+
+enum AttendanceStatus {
+  PRESENTE
+  AUSENTE
+  JUSTIFICADO
+}
+
+enum EventType {
+  AMISTOSO
+  TREINO_ESPECIAL
+  COMPETICAO
+}
+
+// Tabela de Usuários (Alunos e Treinadores)
+model User {
+  id              String   @id @default(uuid())
+  name            String
+  email           String   @unique
+  password        String   // Usado para o login: email e password
+  role            Role     @default(ALUNO)
+  gender          Gender
+  cpf             String   @unique
+  phone           String
+  
+  // Informações adicionais de saúde e contato que você solicitou
+  address         String?
+  telResponsavel  String?
+  bloodType       String?
+  allergies       String?
+
+  // Relacionamentos
+  trainings       Training[]    @relation("CoachTrainings")
+  payments        Payment[]
+  attendances     Attendance[]
+}
+
+// Tabela de Treinos (Cronograma)
+model Training {
+  id           String   @id @default(uuid())
+  title        String   // Ex: Fundamentos Masculino
+  dayOfWeek    Int      // 0 (Dom) a 6 (Sáb)
+  startTime    String   // Ex: "18:00"
+  endTime      String   // Ex: "19:30"
+  category     Gender   // Masculino, Feminino ou Misto
+  
+  coachId      String
+  coach        User     @relation("CoachTrainings", fields: [coachId], references: [id])
+  
+  attendances  Attendance[]
+}
+
+// Tabela de Pagamentos (Mensalidades)
+model Payment {
+  id          String        @id @default(uuid())
+  month       Int           // Janeiro = 1
+  year        Int           // 2025
+  amount      Float         // 150.0
+  status      PaymentStatus @default(PENDENTE)
+  dueDate     DateTime      // Regra de vencimento dia 1 a 5
+  
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+}
+
+// Tabela de Presença e Justificativas
+model Attendance {
+  id            String           @id @default(uuid())
+  date          DateTime         @default(now())
+  status        AttendanceStatus
+  justification String?          // Justificativa de falta
+  
+  trainingId    String
+  training      Training         @relation(fields: [trainingId], references: [id])
+  
+  userId        String
+  user          User             @relation(fields: [userId], references: [id])
+}
+
+// Tabela de Eventos (Calendário de Amistosos)
+model Event {
+  id        String    @id @default(uuid())
+  title     String    // Ex: Amistoso vs Vikings
+  type      EventType @default(AMISTOSO)
+  date      DateTime
+  location  String    // Ex: Ginásio Central
+}

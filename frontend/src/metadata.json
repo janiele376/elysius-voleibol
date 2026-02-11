@@ -1,0 +1,8 @@
+
+{
+  "name": "Elysius Voleibol - Management System",
+  "description": "A comprehensive management system for a volleyball club, featuring student and coach dashboards, financial tracking with QR code payments, training schedules, and attendance monitoring with email notifications.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
