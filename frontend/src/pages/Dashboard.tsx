@@ -17,7 +17,7 @@ const Dashboard: React.FC<{ user: User }> = ({ user }) => {
   return (
     <div className="space-y-8 animate-fadeIn">
       <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
+        <div>         
           <h1 className="text-3xl font-extrabold text-emerald-950">Salve, {user.name}!</h1>
           <p className="text-emerald-700 font-medium">Bem-vindo ao centro de comando Elysius.</p>
         </div>

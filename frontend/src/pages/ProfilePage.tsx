@@ -14,7 +14,7 @@ const ProfilePage: React.FC<{ user: User }> = ({ user }) => {
           </div>
           <div className="w-28 h-28 bg-white rounded-full border-4 border-amber-500 shadow-2xl translate-y-14 flex items-center justify-center relative z-10 overflow-hidden">
             <i className={`fas ${user.gender === Gender.FEMININO ? 'fa-female' : 'fa-male'} text-5xl text-emerald-100`}></i>
-            <img src="https://images.squarespace-cdn.com/content/v1/64010a3a4c4e72403612d334/35761e5e-6379-4592-9976-932f913d0972/logo.png" alt="Overlay" className="absolute inset-0 opacity-10" />
+            <img src="/src/imgs/504334574_17920031589101995_729957981761403041_n.png" alt="Overlay" className="absolute inset-0 opacity-10" />
           </div>
         </div>
         

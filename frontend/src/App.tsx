@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route, Navigate, Link, useNavigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { User, Role } from './types';
-import { api } from './services/api';
+import { Gender } from './types'; 
 
 // Components
 import LoginPage from './pages/LoginPage';
@@ -13,6 +12,7 @@ import TrainingPage from './pages/TrainingPage';
 import AttendancePage from './pages/AttendancePage';
 import ProfilePage from './pages/ProfilePage';
 import AdminManagement from './pages/AdminManagement';
+
 
 const Navbar: React.FC<{ user: User | null; onLogout: () => void }> = ({ user, onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,7 +25,7 @@ const Navbar: React.FC<{ user: User | null; onLogout: () => void }> = ({ user, o
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center space-x-3">
-              <img src="C:\Users\Aluno\Documents\Janiele_info3\elysius-voleibol\frontend\src\imgs\504334574_17920031589101995_729957981761403041_n.png" alt="Elysius Logo" className="h-10 w-10 rounded-full border border-amber-500/50" />
+              <img src="/src/imgs/504334574_17920031589101995_729957981761403041_n.png" alt="Elysius Logo" className="h-10 w-10 rounded-full border border-amber-500/50" />
               <span className="font-bold text-xl tracking-tight text-emerald-50">Elysius Voleibol</span>
             </Link>
             <div className="hidden md:block">
@@ -91,8 +91,28 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const savedUser = localStorage.getItem('elysius_user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+    
+    // Dados para simular o sistema funcionando sem backend
+    const usuarioSimulado: User = {
+      id: '1',
+      name: 'Janiele (Admin)',
+      email: 'admin@elysius.com',
+      role: Role.TREINADOR,
+      cpf: '000.000.000-00', // Campo adicionado
+      phone: '(85) 99999-9999', // Campo adicionado
+      gender: Gender.FEMININO // Campo adicionado (ajuste se for sigla como 'F' ou 'M')
+    };
+
+    if (savedUser && savedUser !== "undefined" && savedUser !== "") {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (e) {
+        // Se o JSON estiver quebrado (erro que você teve), ele entra aqui
+        setUser(usuarioSimulado);
+      }
+    } else {
+      // Força o usuário simulado se não houver ninguém logado
+      setUser(usuarioSimulado);
     }
     setLoading(false);
   }, []);
@@ -109,7 +129,11 @@ const App: React.FC = () => {
     localStorage.removeItem('elysius_token');
   };
 
-  if (loading) return <div className="h-screen flex items-center justify-center bg-emerald-50"><i className="fas fa-circle-notch fa-spin text-4xl text-emerald-800"></i></div>;
+  if (loading) return (
+    <div className="h-screen flex items-center justify-center bg-emerald-50">
+      <i className="fas fa-circle-notch fa-spin text-4xl text-emerald-800"></i>
+    </div>
+  );
 
   return (
     <HashRouter>
